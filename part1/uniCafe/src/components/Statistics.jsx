@@ -1,5 +1,10 @@
 
 export const Statistics = ({good,neutral,bad}) => {
+  if(!(good || neutral || bad)){
+    return (
+      <p>no feedback</p>
+    )
+  }
   return (
     <div>
     <p>good {good}</p>
