@@ -1,4 +1,7 @@
-import { useState } from "react"
+import { useState } from "react";
+import { Statistics } from "./components/Statistics";
+import { Header } from "./components/Header";
+import { Content } from "./components/Content";
 
 const App = () => {
   const [good,setGood]=useState(0);
@@ -7,15 +10,12 @@ const App = () => {
 
    return (
     <>
-    <h2>give feedback</h2>
+    <Header/>
     <button onClick={() => setGood(good + 1)}>good</button>
     <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
     <button onClick={() => setBad(bad + 1)}>bad</button>
-    <h2>statistics</h2>
-    <p>good {good}</p>
-    <p>neutral {neutral}</p>
-    <p>bad {bad}</p>
-    {/* video completed 10/58 */}
+    <Content/>
+    <Statistics good={good} neutral={neutral} bad={bad}/>
     </>
   )
 }
