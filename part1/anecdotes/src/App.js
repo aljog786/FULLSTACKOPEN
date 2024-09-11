@@ -44,7 +44,7 @@ const App = () => {
       (<p>no votes yet</p>)
       :
       (<><p>{anecdotes[maxVoteIndex]}</p><p>has {votes[maxVoteIndex]} vote(s)</p></>)}
-      {/* video completed : 17/58 */}
+      {/* part2 completed : 18/58 */}
     </div>
   );
 }
