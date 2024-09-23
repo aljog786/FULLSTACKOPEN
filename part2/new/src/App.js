@@ -1,4 +1,3 @@
-//part2\new\src\App.js
 
 import { Course } from "./components/Course"
 
@@ -55,7 +54,7 @@ const App = () => {
       }
     </div>
   )
-  // video completed : 21/58
+  // video completed : 22/58
 }
 
 export default App
