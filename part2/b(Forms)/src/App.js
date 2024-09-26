@@ -9,6 +9,15 @@ const App = (props) => {
 
     event.preventDefault();
     console.log(event.target);
+
+    const nameExists = persons.some((person) => person.name === newName );
+
+    if (nameExists) {
+      alert(`${newName} is already added to phonebook`);
+      setNewName("");
+      return;
+    }
+
     const nameObject = {
       id : persons.length+1,
       name : newName
@@ -39,6 +48,7 @@ const App = (props) => {
         return <Names key={person.id} person={person} />
       })}
     </div>
+  // video completed : 23/58
   )
 }
 

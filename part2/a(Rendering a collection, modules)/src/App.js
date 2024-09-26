@@ -54,7 +54,6 @@ const App = () => {
       }
     </div>
   )
-  // video completed : 22/58
 }
 
 export default App
