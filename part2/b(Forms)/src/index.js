@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 const persons = [
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas',number : "100-420" }
   ]
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
