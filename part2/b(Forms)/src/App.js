@@ -5,6 +5,8 @@ const App = (props) => {
   const [persons, setPersons] = useState(props.persons);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [searchPerson,setSearchPerson] = useState("");
+  const [filterPerson,setFilterPerson] = useState(props.persons);
 
 
   const addName = (event) => {
@@ -18,6 +20,9 @@ const App = (props) => {
       alert(`${newName} is already added to phonebook`);
       setNewName("");
       return;
+    } else {
+      alert(`${newName} sucessfully added`);
+
     }
 
     const nameObject = {
@@ -26,6 +31,7 @@ const App = (props) => {
       number : newNumber
     };
     setPersons(persons.concat(nameObject));
+    setFilterPerson(filterPerson.concat(nameObject));
     setNewName('');
     setNewNumber('');
 
@@ -40,11 +46,25 @@ const App = (props) => {
     setNewNumber(event.target.value);
   }
 
+  const handleSearchPerson = (event) => {
+    console.log(event.target.value);
+    setSearchPerson(event.target.value);
+
+    const filterItems = persons.filter((person) => 
+       person.name.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setFilterPerson(filterItems);
+  }
+
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+          filter shown with:{" "} <input value={searchPerson} onChange={handleSearchPerson}/>
+        </div>
       <form onSubmit={addName}>
+      <h2>add a new</h2>
         <div>
           name: <input value={newName} onChange={handleNameChange}/>
         </div>
@@ -56,11 +76,11 @@ const App = (props) => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map((person) => {
+      {filterPerson.map((person) => {
         return <Names key={person.id} person={person} />
       })}
     </div>
-  // video completed : 23/58
+  // video completed : 27/58
   )
 }
 
