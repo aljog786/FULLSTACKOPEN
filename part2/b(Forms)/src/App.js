@@ -1,6 +1,42 @@
 import { useState } from 'react';
 import { Names } from './components/Names';
 
+const Filter = ({searchPerson,handleSearchPerson}) => {
+ return (
+<div>
+  filter shown with:{" "} <input value={searchPerson} onChange={handleSearchPerson}/>
+        </div>
+ ) 
+  
+}
+
+const PersonForm = ({addName,newName,handleNameChange,newNumber,handleNumberChange}) => {
+return (
+  <form onSubmit={addName}>
+        <div>
+          name: <input value={newName} onChange={handleNameChange}/>
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleNumberChange}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+)
+}
+
+const Person = ({filterPerson}) => {
+  return (
+    <div>
+    {filterPerson.map((person) => {
+        return <Names key={person.id} person={person} />
+      })}
+    </div>
+  )
+}
+
+
 const App = (props) => {
   const [persons, setPersons] = useState(props.persons);
   const [newName, setNewName] = useState('');
@@ -60,25 +96,11 @@ const App = (props) => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-          filter shown with:{" "} <input value={searchPerson} onChange={handleSearchPerson}/>
-        </div>
-      <form onSubmit={addName}>
-      <h2>add a new</h2>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {filterPerson.map((person) => {
-        return <Names key={person.id} person={person} />
-      })}
+      <Filter searchPerson={searchPerson} handleSearchPerson={handleSearchPerson}/>
+      <h3>Add a new</h3>
+      <PersonForm  addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
+      <h3>Numbers</h3>
+      <Person filterPerson={filterPerson} />
     </div>
   // video completed : 27/58
   )
