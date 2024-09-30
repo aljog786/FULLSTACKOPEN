@@ -60,7 +60,6 @@ const App = (props) => {
       alert(`${newName} sucessfully added`);
 
     }
-
     const nameObject = {
       id : persons.length+1,
       name : newName,
@@ -77,6 +76,7 @@ const App = (props) => {
     console.log(event.target.value);
     setNewName(event.target.value);
   }
+
   const handleNumberChange = (event) => {
     console.log(event.target.value);
     setNewNumber(event.target.value);
