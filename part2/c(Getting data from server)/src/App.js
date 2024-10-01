@@ -1,6 +1,7 @@
 import { useState,useEffect } from 'react';
-import axios from "axios";
+// import axios from "axios";
 import { Names } from './components/Names';
+import name from './service/name';
 
 const Filter = ({searchPerson,handleSearchPerson}) => {
  return (
@@ -8,7 +9,6 @@ const Filter = ({searchPerson,handleSearchPerson}) => {
   filter shown with:{" "} <input value={searchPerson} onChange={handleSearchPerson}/>
         </div>
  ) 
-  
 }
 
 const PersonForm = ({addName,newName,handleNameChange,newNumber,handleNumberChange}) => {
@@ -47,11 +47,12 @@ const App = () => {
 
   const hook = () => {
     console.log('effect');
-    axios.get("http://localhost:3001/persons")
-    .then((response) => {
+    name
+    .getAll()
+    .then((initialPerson) => {
     console.log('promise fullfilled');
-    setPersons(response.data);
-    setFilterPerson(response.data);
+    setPersons(initialPerson);
+    setFilterPerson(initialPerson);
     })
     .catch(error => {
     console.error('fetching failed',error);
@@ -85,11 +86,11 @@ const App = () => {
     };
 
     // adding new person details to db.json
-    axios.post("http://localhost:3001/persons",nameObject)
-    .then( response => {
-      console.log(response);
-        setPersons(persons.concat(response.data));
-    setFilterPerson(filterPerson.concat(response.data));
+    name.create(nameObject)
+    .then( returnedPerson => {
+      console.log(returnedPerson);
+        setPersons(persons.concat(returnedPerson));
+    setFilterPerson(filterPerson.concat(returnedPerson));
     setNewName('');
     setNewNumber('');
     });
