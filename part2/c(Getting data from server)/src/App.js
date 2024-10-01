@@ -1,7 +1,7 @@
 import { useState,useEffect } from 'react';
 // import axios from "axios";
 import { Names } from './components/Names';
-import name from './service/name';
+import nameService from './service/name';
 
 const Filter = ({searchPerson,handleSearchPerson}) => {
  return (
@@ -27,11 +27,11 @@ return (
 )
 }
 
-const Person = ({filterPerson}) => {
+const Person = ({filterPerson,deletePerson}) => {
   return (
     <div>
     {filterPerson.map((person) => {
-        return <Names key={person.id} person={person} />
+        return <Names key={person.id} person={person} deletePerson={deletePerson}/>
       })}
     </div>
   )
@@ -47,7 +47,7 @@ const App = () => {
 
   const hook = () => {
     console.log('effect');
-    name
+    nameService
     .getAll()
     .then((initialPerson) => {
     console.log('promise fullfilled');
@@ -86,7 +86,7 @@ const App = () => {
     };
 
     // adding new person details to db.json
-    name.create(nameObject)
+    nameService.create(nameObject)
     .then( returnedPerson => {
       console.log(returnedPerson);
         setPersons(persons.concat(returnedPerson));
@@ -95,6 +95,23 @@ const App = () => {
     setNewNumber('');
     });
 
+  }
+
+  const deletePerson = (id,name) => {
+    const confirmDelete = window.confirm(`Delete ${name} ?`);
+    if (!confirmDelete) {
+      return;
+    }
+    nameService
+    .remove(id)
+    .then(() => {
+      setPersons(persons.filter(person => person.id !== id))
+      setFilterPerson(filterPerson.filter(person => person.id !== id))
+    })
+    .catch((error) => {
+      console.log('Error deleting person', error.message);
+      alert('Error deleting person');
+    })
   }
 
   const handleNameChange = (event) => {
@@ -125,7 +142,8 @@ const App = () => {
       <h3>Add a new</h3>
       <PersonForm  addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h3>Numbers</h3>
-      <Person filterPerson={filterPerson} />
+      <Person filterPerson={filterPerson} deletePerson={deletePerson}/>
+      {/* completed : 33/60 */}
     </div>
   )
 }
