@@ -79,14 +79,20 @@ const App = () => {
 
     }
     const nameObject = {
-      id : persons.length+1,
+      // id : persons.length+1,
       name : newName,
       number : newNumber
     };
-    setPersons(persons.concat(nameObject));
-    setFilterPerson(filterPerson.concat(nameObject));
+
+    // adding new person details to db.json
+    axios.post("http://localhost:3001/persons",nameObject)
+    .then( response => {
+      console.log(response);
+        setPersons(persons.concat(response.data));
+    setFilterPerson(filterPerson.concat(response.data));
     setNewName('');
     setNewNumber('');
+    });
 
   }
 
