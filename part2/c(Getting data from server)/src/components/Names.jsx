@@ -1,8 +1,7 @@
-// import name from "../service/name";
-export const Names = ({person,deletePerson}) => {
+export const Names = ({person}) => {
   return (
     <div>
-      {person.name} {person.number} <button onClick={() => deletePerson(person.id,person.name)}>delete</button>
+      {person.name} {person.number}
     </div>
   );
 }
