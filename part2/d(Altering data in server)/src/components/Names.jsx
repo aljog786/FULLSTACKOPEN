@@ -1,4 +1,3 @@
-// import name from "../service/name";
 export const Names = ({person,deletePerson}) => {
   return (
     <div>

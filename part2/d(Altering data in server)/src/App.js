@@ -69,33 +69,49 @@ const App = () => {
     event.preventDefault();
     console.log(event.target);
 
-    const nameExists = persons.some((person) => person.name === newName );
+    const nameExists = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase() );
 
-    if (nameExists) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName("");
-      return;
-    } else {
-      alert(`${newName} sucessfully added`);
-
-    }
     const nameObject = {
       // id : persons.length+1,
       name : newName,
       number : newNumber
     };
 
-    // adding new person details to db.json
+    if (nameExists) {
+      const confirmed = window.confirm(`${nameExists.name} is already added to phonebook`);
+      if (!confirmed) {
+       // if user doesn't confirm the entry to be true,do nothing.
+       return ;
+      }
+
+      // update logic
+      nameService.update(nameExists.id,nameObject)
+      .then((updatedPerson) => {
+        setPersons((prevPerson) => prevPerson.id === nameExists.id ? updatedPerson : persons);
+        setFilterPerson(prevFilteredPerson => prevFilteredPerson.id === nameExists.id ? updatedPerson : persons);
+      })
+      .catch((error) => {
+        console.error('error updating the number',error.message);
+        alert('error updating the number');
+    })      
+    } else {
+      // adding new person details to db.json
     nameService.create(nameObject)
     .then( returnedPerson => {
       console.log(returnedPerson);
         setPersons(persons.concat(returnedPerson));
     setFilterPerson(filterPerson.concat(returnedPerson));
+    
+    }).catch((error) => {
+      console.error('error updating the number',error.message);
+      alert('error updating the number');
+  });
+    }
     setNewName('');
     setNewNumber('');
-    });
-
   }
+
+    // deleting a person from db.json
 
   const deletePerson = (id,name) => {
     const confirmDelete = window.confirm(`Delete ${name} ?`);
