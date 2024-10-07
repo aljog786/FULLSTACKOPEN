@@ -1,7 +1,13 @@
 import { useState,useEffect } from 'react';
-// import axios from "axios";
 import { Names } from './components/Names';
 import nameService from './service/name';
+import './index.css';
+
+const Notification = ({successMsg}) => {
+return (
+  <div className='successMsg'>{successMsg}</div>
+)
+}
 
 const Filter = ({searchPerson,handleSearchPerson}) => {
  return (
@@ -11,8 +17,10 @@ const Filter = ({searchPerson,handleSearchPerson}) => {
  ) 
 }
 
-const PersonForm = ({addName,newName,handleNameChange,newNumber,handleNumberChange}) => {
+const PersonForm = ({addName,newName,handleNameChange,newNumber,handleNumberChange,successMsg}) => {
 return (
+  <div>
+    {successMsg && <Notification successMsg={successMsg}/>}
   <form onSubmit={addName}>
         <div>
           name: <input value={newName} onChange={handleNameChange}/>
@@ -24,6 +32,7 @@ return (
           <button type="submit">add</button>
         </div>
       </form>
+  </div>
 )
 }
 
@@ -44,6 +53,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [searchPerson,setSearchPerson] = useState("");
   const [filterPerson,setFilterPerson] = useState([]);
+  const [successMsg,setSuccessMsg] = useState ('');
 
   const hook = () => {
     console.log('effect');
@@ -101,6 +111,10 @@ const App = () => {
       console.log(returnedPerson);
         setPersons(persons.concat(returnedPerson));
     setFilterPerson(filterPerson.concat(returnedPerson));
+    setSuccessMsg(`${returnedPerson.name} is successfully added.`);
+    setTimeout(()=>{
+      setSuccessMsg('');
+    },4000);
     
     }).catch((error) => {
       console.error('error updating the number',error.message);
@@ -156,10 +170,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter searchPerson={searchPerson} handleSearchPerson={handleSearchPerson}/>
       <h3>Add a new</h3>
-      <PersonForm  addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
+      <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} successMsg={successMsg}/>
       <h3>Numbers</h3>
       <Person filterPerson={filterPerson} deletePerson={deletePerson}/>
-      {/* completed : 34/60 */}
+      {/* completed : 35/60 */}
     </div>
   )
 }
