@@ -3,11 +3,11 @@ import { Names } from './components/Names';
 import nameService from './service/name';
 import './index.css';
 
-const Notification = ({successMsg}) => {
-return (
-  <div className='successMsg'>{successMsg}</div>
-)
-}
+// const Notification = ({successMsg}) => {
+// return (
+//   <div className='successMsg'>{successMsg}</div>
+// )
+// }
 
 const Filter = ({searchPerson,handleSearchPerson}) => {
  return (
@@ -17,10 +17,10 @@ const Filter = ({searchPerson,handleSearchPerson}) => {
  ) 
 }
 
-const PersonForm = ({addName,newName,handleNameChange,newNumber,handleNumberChange,successMsg}) => {
+const PersonForm = ({addName,newName,handleNameChange,newNumber,handleNumberChange}) => {
 return (
   <div>
-    {successMsg && <Notification successMsg={successMsg}/>}
+    {/* {successMsg && <Notification successMsg={successMsg}/>} */}
   <form onSubmit={addName}>
         <div>
           name: <input value={newName} onChange={handleNameChange}/>
@@ -54,6 +54,17 @@ const App = () => {
   const [searchPerson,setSearchPerson] = useState("");
   const [filterPerson,setFilterPerson] = useState([]);
   const [successMsg,setSuccessMsg] = useState ('');
+  const [errorMsg,setErrorMsg] = useState ('');
+
+  const Notification = ({message,isError}) => {
+    if (!message) {
+      return null;
+    }
+    const className = isError ? 'errorMsg' : 'successMsg';
+    return (
+      <div className={className}>{message}</div>
+    )
+  }
 
   const hook = () => {
     console.log('effect');
@@ -88,23 +99,39 @@ const App = () => {
     };
 
     if (nameExists) {
-      const confirmed = window.confirm(`${nameExists.name} is already added to phonebook`);
+      const confirmed = window.confirm(`${nameExists.name} is already added to the phonebook,replace the old number with one ?`);
       if (!confirmed) {
        // if user doesn't confirm the entry to be true,do nothing.
        return ;
       }
 
       // update logic
-      nameService.update(nameExists.id,nameObject)
-      .then((updatedPerson) => {
-        setPersons((prevPerson) => prevPerson.id === nameExists.id ? updatedPerson : persons);
-        setFilterPerson(prevFilteredPerson => prevFilteredPerson.id === nameExists.id ? updatedPerson : persons);
-      })
-      .catch((error) => {
-        console.error('error updating the number',error.message);
-        alert('error updating the number');
-    })      
-    } else {
+      nameService.update(nameExists.id, nameObject)
+    .then((updatedPerson) => {
+      setPersons((prevPersons) =>
+        prevPersons.map((person) =>
+          person.id === nameExists.id ? updatedPerson : person
+        )
+      );
+      setFilterPerson((prevFilteredPerson) =>
+        prevFilteredPerson.map((person) =>
+          person.id === nameExists.id ? updatedPerson : person
+        )
+      );
+
+      setSuccessMsg(`${updatedPerson.name} has been successfully updated.`);
+      setTimeout(() => {
+        setSuccessMsg('');
+      }, 4000);
+    })
+    .catch((error) => {
+      console.error('error updating the number', error.message);
+      setErrorMsg(`Information: ${nameExists.name} has already been removed from the server.`);
+      setTimeout(() => {
+        setErrorMsg('');
+      }, 4000);
+    });
+}  else {
       // adding new person details to db.json
     nameService.create(nameObject)
     .then( returnedPerson => {
@@ -168,12 +195,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMsg} isError={false}/>
+    <Notification message={errorMsg} isError={false}/>
       <Filter searchPerson={searchPerson} handleSearchPerson={handleSearchPerson}/>
       <h3>Add a new</h3>
-      <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} successMsg={successMsg}/>
+      <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h3>Numbers</h3>
       <Person filterPerson={filterPerson} deletePerson={deletePerson}/>
-      {/* completed : 35/60 */}
+      {/* completed : 36/60 */}
     </div>
   )
 }
